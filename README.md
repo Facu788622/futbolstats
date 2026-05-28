@@ -1,4 +1,4 @@
-# FutbolStats
+# Futbol Stats
 
 Aplicación web de estadísticas de fútbol — SUT para práctica de Cypress, Postman y MySQL.
 
