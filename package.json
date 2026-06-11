@@ -1,0 +1,28 @@
+{
+  "name": "futbolstatss",
+  "version": "1.0.0",
+  "description": "Aplicación web de estadísticas de fútbol — SUT para práctica de Cypress, Postman y MySQL.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://Facu788622@github.com/Facu788622/futbolstats.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Facu788622/futbolstats/issues"
+  },
+  "homepage": "https://github.com/Facu788622/futbolstats#readme",
+  "devDependencies": {
+    "@faker-js/faker": "^9.9.0",
+    "cypress": "^15.17.0"
+  }
+}
