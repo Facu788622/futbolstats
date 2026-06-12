@@ -1,0 +1,32 @@
+{
+  "success": true,
+  "data": [
+    {
+      "position": 1,
+      "team": { "name": "River Plate" },
+      "points": 45,
+      "wins": 14,
+      "draws": 3,
+      "losses": 2,
+      "played": 19
+    },
+    {
+      "position": 2,
+      "team": { "name": "Boca Juniors" },
+      "points": 42,
+      "wins": 13,
+      "draws": 3,
+      "losses": 3,
+      "played": 19
+    },
+    {
+      "position": 3,
+      "team": { "name": "Racing Club" },
+      "points": 38,
+      "wins": 12,
+      "draws": 2,
+      "losses": 5,
+      "played": 19
+    }
+  ]
+}
