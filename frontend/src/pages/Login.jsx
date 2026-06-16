@@ -1,80 +1,85 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { useAuth } from '../context/AuthContext'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import useTitle from "../hooks/useTitle";
 
 export default function Login() {
-  const [email,    setEmail]    = useState('')
-  const [password, setPassword] = useState('')
-  const [error,    setError]    = useState('')
-  const { login, loading }      = useAuth()
-  const navigate                = useNavigate()
+  useTitle("Login");
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      await login(email, password)
-      navigate('/')
+      await login(email, password);
+      navigate("/");
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al iniciar sesión')
+      setError(err.response?.data?.error || "Credenciales incorrectas");
+    } finally {
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="page-enter min-h-screen flex items-center justify-center px-4">
+    <div className="page-enter min-h-[80vh] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="font-display text-5xl text-white">FUTBOL<span className="text-green">STATS</span></h1>
-          <p className="text-slate-500 text-sm mt-1">Ingresá a tu cuenta</p>
-        </div>
+        <h1 className="font-display text-5xl text-white mb-2">ACCEDER</h1>
+        <p className="text-slate-500 text-sm mb-8">
+          Ingresá con tu cuenta de FutbolStats
+        </p>
 
-        <div className="card space-y-4">
-          {error && (
-            <div className="bg-red-muted border border-red/30 text-red text-sm rounded-lg px-4 py-3">
-              {error}
-            </div>
-          )}
-
+        <form onSubmit={handleSubmit} className="card space-y-4">
           <div>
-            <label className="text-xs text-slate-400 block mb-1.5">Email</label>
+            <label className="text-xs text-slate-400 block mb-1">Email</label>
             <input
               type="email"
               value={email}
-              onChange={e => setEmail(e.target.value)}
-              placeholder="admin@futbolstats.com"
-              className="w-full bg-pitch border border-pitch-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-green transition-colors"
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full bg-pitch border border-pitch-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-green"
+              placeholder="tu@email.com"
             />
           </div>
-
           <div>
-            <label className="text-xs text-slate-400 block mb-1.5">Contraseña</label>
+            <label className="text-xs text-slate-400 block mb-1">
+              Contraseña
+            </label>
             <input
               type="password"
               value={password}
-              onChange={e => setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full bg-pitch border border-pitch-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-green"
               placeholder="••••••••"
-              className="w-full bg-pitch border border-pitch-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-green transition-colors"
             />
           </div>
 
+          {error && <p className="text-red-400 text-xs">{error}</p>}
+
           <button
-            onClick={handleSubmit}
+            type="submit"
             disabled={loading}
-            className="btn-primary w-full justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary w-full"
           >
-            {loading ? 'Ingresando...' : 'Ingresar'}
+            {loading ? "Ingresando..." : "Ingresar"}
           </button>
+        </form>
 
-          <p className="text-center text-xs text-slate-500">
-            ¿No tenés cuenta?{' '}
-            <Link to="/register" className="text-green hover:underline">Registrate</Link>
-          </p>
-        </div>
-
-        <p className="text-center text-xs text-slate-600 mt-6">
-          Admin: admin@futbolstats.com / admin1234
+        <p className="text-slate-500 text-sm text-center mt-6">
+          ¿No tenés cuenta?{" "}
+          <Link to="/register" className="text-green hover:underline">
+            Registrate
+          </Link>
         </p>
       </div>
     </div>
-  )
+  );
 }

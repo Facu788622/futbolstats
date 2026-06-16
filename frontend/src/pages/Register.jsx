@@ -1,58 +1,86 @@
-import { useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import { register as registerService } from '../services/authService'
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import useTitle from "../hooks/useTitle";
 
 export default function Register() {
-  const [email,    setEmail]    = useState('')
-  const [password, setPassword] = useState('')
-  const [error,    setError]    = useState('')
-  const [loading,  setLoading]  = useState(false)
-  const navigate                = useNavigate()
+  useTitle("Registro");
+
+  const { register } = useAuth();
+  const navigate = useNavigate();
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setError('')
-    setLoading(true)
+    e.preventDefault();
+    setError("");
+    setLoading(true);
     try {
-      await registerService({ email, password })
-      navigate('/login')
+      await register(email, password);
+      navigate("/");
     } catch (err) {
-      setError(err.response?.data?.error || 'Error al registrarse')
+      setError(err.response?.data?.error || "Error al registrarse");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="page-enter min-h-screen flex items-center justify-center px-4">
+    <div className="page-enter min-h-[80vh] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <h1 className="font-display text-5xl text-white">FUTBOL<span className="text-green">STATS</span></h1>
-          <p className="text-slate-500 text-sm mt-1">Creá tu cuenta</p>
-        </div>
-        <div className="card space-y-4">
-          {error && (
-            <div className="bg-red-muted border border-red/30 text-red text-sm rounded-lg px-4 py-3">{error}</div>
-          )}
+        <h1 className="font-display text-5xl text-white mb-2">REGISTRO</h1>
+        <p className="text-slate-500 text-sm mb-8">
+          Creá tu cuenta de FutbolStats
+        </p>
+
+        <form onSubmit={handleSubmit} className="card space-y-4">
           <div>
-            <label className="text-xs text-slate-400 block mb-1.5">Email</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)}
-              className="w-full bg-pitch border border-pitch-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-green transition-colors" />
+            <label className="text-xs text-slate-400 block mb-1">Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full bg-pitch border border-pitch-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-green"
+              placeholder="tu@email.com"
+            />
           </div>
           <div>
-            <label className="text-xs text-slate-400 block mb-1.5">Contraseña</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)}
-              className="w-full bg-pitch border border-pitch-border rounded-lg px-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-green transition-colors" />
+            <label className="text-xs text-slate-400 block mb-1">
+              Contraseña
+            </label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
+              className="w-full bg-pitch border border-pitch-border text-white text-sm rounded-lg px-3 py-2.5 focus:outline-none focus:border-green"
+              placeholder="mínimo 6 caracteres"
+            />
           </div>
-          <button onClick={handleSubmit} disabled={loading}
-            className="btn-primary w-full justify-center disabled:opacity-50">
-            {loading ? 'Registrando...' : 'Registrarse'}
+
+          {error && <p className="text-red-400 text-xs">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="btn-primary w-full"
+          >
+            {loading ? "Creando cuenta..." : "Crear cuenta"}
           </button>
-          <p className="text-center text-xs text-slate-500">
-            ¿Ya tenés cuenta? <Link to="/login" className="text-green hover:underline">Ingresá</Link>
-          </p>
-        </div>
+        </form>
+
+        <p className="text-slate-500 text-sm text-center mt-6">
+          ¿Ya tenés cuenta?{" "}
+          <Link to="/login" className="text-green hover:underline">
+            Ingresá
+          </Link>
+        </p>
       </div>
     </div>
-  )
+  );
 }
