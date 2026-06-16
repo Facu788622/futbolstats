@@ -1,4 +1,4 @@
-'use strict';
+''use strict';
 
 const { Model } = require('sequelize');
 
@@ -66,6 +66,11 @@ module.exports = (sequelize, DataTypes) => {
           min: { args: [1], msg: 'La fecha debe ser mayor a 0' },
         },
       },
+      featured: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+      },
       deleted_at: {
         type: DataTypes.DATE,
         allowNull: true,
@@ -78,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: 'fixtures',
       underscored: true,
       timestamps: true,
-      paranoid: true,         // activa soft delete: usa deleted_at automáticamente
+      paranoid: true,
       deletedAt: 'deleted_at',
     }
   );
