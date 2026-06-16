@@ -9,10 +9,12 @@ export default function AdminPanel() {
   useTitle("Admin");
 
   const {
-    data: fixtures,
+    data: fixturesData,
     loading,
     refetch,
   } = useFetch(getFixtures, { league_id: 1 });
+  const [order, setOrder] = useState([]);
+  const [dragId, setDragId] = useState(null);
   const [editing, setEditing] = useState(null);
   const [homeScore, setHomeScore] = useState("");
   const [awayScore, setAwayScore] = useState("");
@@ -20,6 +22,19 @@ export default function AdminPanel() {
   const [featured, setFeatured] = useState(false);
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+
+  // Usa el orden local si existe, si no usa el orden de la API
+  const fixtures =
+    order.length > 0
+      ? order
+          .map((id) => fixturesData?.find((f) => f.id === id))
+          .filter(Boolean)
+      : fixturesData || [];
+
+  // Sincroniza el orden local cuando llegan datos de la API
+  if (fixturesData && order.length === 0 && fixturesData.length > 0) {
+    setOrder(fixturesData.map((f) => f.id));
+  }
 
   const openEdit = (f) => {
     setEditing(f.id);
@@ -49,6 +64,33 @@ export default function AdminPanel() {
     }
   };
 
+  // Drag & drop handlers
+  const handleDragStart = (e, id) => {
+    setDragId(id);
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e, targetId) => {
+    e.preventDefault();
+    if (dragId === targetId) return;
+    setOrder((prev) => {
+      const next = [...prev];
+      const fromIdx = next.indexOf(dragId);
+      const toIdx = next.indexOf(targetId);
+      next.splice(fromIdx, 1);
+      next.splice(toIdx, 0, dragId);
+      return next;
+    });
+    setDragId(null);
+  };
+
+  const handleDragEnd = () => setDragId(null);
+
   return (
     <div
       data-testid="admin-panel"
@@ -60,27 +102,44 @@ export default function AdminPanel() {
       {loading && <Spinner />}
 
       <div className="space-y-3">
-        {fixtures?.map((f) => (
-          <div key={f.id} className="card">
+        {fixtures.map((f) => (
+          <div
+            key={f.id}
+            data-testid="draggable-item"
+            draggable
+            onDragStart={(e) => handleDragStart(e, f.id)}
+            onDragOver={handleDragOver}
+            onDrop={(e) => handleDrop(e, f.id)}
+            onDragEnd={handleDragEnd}
+            className={`card transition-opacity ${dragId === f.id ? "opacity-40" : "opacity-100"}`}
+          >
             <div className="flex items-center justify-between gap-4">
-              <div className="flex-1">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm text-white font-medium">
-                    {f.homeTeam?.name}{" "}
-                    <span className="text-slate-500">vs</span>{" "}
-                    {f.awayTeam?.name}
-                  </p>
-                  {f.featured && (
-                    <span className="text-xs text-amber-400 border border-amber-400/30 rounded px-1.5 py-0.5">
-                      Destacado
-                    </span>
-                  )}
+              <div className="flex items-center gap-3 flex-1">
+                {/* Handle visual de drag */}
+                <div className="text-slate-600 cursor-grab active:cursor-grabbing select-none flex flex-col gap-0.5">
+                  <span className="block w-4 h-0.5 bg-current rounded" />
+                  <span className="block w-4 h-0.5 bg-current rounded" />
+                  <span className="block w-4 h-0.5 bg-current rounded" />
                 </div>
-                <p className="text-xs text-slate-500 font-mono mt-0.5">
-                  Fecha {f.matchday} — {f.status}
-                  {f.status !== "scheduled" &&
-                    ` — ${f.home_score}:${f.away_score}`}
-                </p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm text-white font-medium">
+                      {f.homeTeam?.name}{" "}
+                      <span className="text-slate-500">vs</span>{" "}
+                      {f.awayTeam?.name}
+                    </p>
+                    {f.featured && (
+                      <span className="text-xs text-amber-400 border border-amber-400/30 rounded px-1.5 py-0.5">
+                        Destacado
+                      </span>
+                    )}
+                  </div>
+                  <p className="text-xs text-slate-500 font-mono mt-0.5">
+                    Fecha {f.matchday} — {f.status}
+                    {f.status !== "scheduled" &&
+                      ` — ${f.home_score}:${f.away_score}`}
+                  </p>
+                </div>
               </div>
               <button
                 data-testid="edit-player-btn"
