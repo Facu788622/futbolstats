@@ -1,13 +1,16 @@
-'use strict';
+"use strict";
 
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Player extends Model {
     static associate(db) {
-      Player.belongsTo(db.Team, { foreignKey: 'team_id', as: 'team' });
-      Player.hasMany(db.FixtureEvent, { foreignKey: 'player_id', as: 'events' });
-      Player.hasMany(db.PlayerStat, { foreignKey: 'player_id', as: 'stats' });
+      Player.belongsTo(db.Team, { foreignKey: "team_id", as: "team" });
+      Player.hasMany(db.FixtureEvent, {
+        foreignKey: "player_id",
+        as: "events",
+      });
+      Player.hasMany(db.PlayerStat, { foreignKey: "player_id", as: "stats" });
     }
   }
 
@@ -22,16 +25,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING(150),
         allowNull: false,
         validate: {
-          notEmpty: { msg: 'El nombre del jugador no puede estar vacío' },
+          notEmpty: { msg: "El nombre del jugador no puede estar vacío" },
         },
       },
       position: {
-        type: DataTypes.ENUM('GK', 'DEF', 'MID', 'FWD'),
+        type: DataTypes.ENUM("GK", "DEF", "MID", "FWD"),
         allowNull: false,
         validate: {
           isIn: {
-            args: [['GK', 'DEF', 'MID', 'FWD']],
-            msg: 'La posición debe ser GK, DEF, MID o FWD',
+            args: [["GK", "DEF", "MID", "FWD"]],
+            msg: "La posición debe ser GK, DEF, MID o FWD",
           },
         },
       },
@@ -39,21 +42,26 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DATEONLY,
         allowNull: true,
         validate: {
-          isDate: { msg: 'La fecha de nacimiento no tiene formato válido' },
+          isDate: { msg: "La fecha de nacimiento no tiene formato válido" },
         },
       },
       team_id: {
         type: DataTypes.INTEGER,
         allowNull: true,
       },
+      photo_url: {
+        type: DataTypes.STRING(500),
+        allowNull: true,
+        defaultValue: null,
+      },
     },
     {
       sequelize,
-      modelName: 'Player',
-      tableName: 'players',
+      modelName: "Player",
+      tableName: "players",
       underscored: true,
       timestamps: true,
-    }
+    },
   );
 
   return Player;
