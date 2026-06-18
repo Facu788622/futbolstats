@@ -60,14 +60,13 @@ describe("Nivel 3 — Traversal del DOM y colecciones", () => {
       });
     });
 
-    it("each() itera sobre links de la navbar y verifica sus hrefs", () => {
-      cy.visit("/");
-      const rutasEsperadas = ["/", "/fixtures", "/standings", "/players"];
-      cy.get("nav a").each(($link, index) => {
-        expect($link.attr("href")).to.eq(rutasEsperadas[index]);
-      });
-    });
-
+   it('each() itera sobre links de la navbar y verifica sus hrefs', () => {
+  cy.visit('/')
+  const rutasEsperadas = ['/', '/fixtures', '/standings', '/players']
+  cy.get('nav ul a').each(($link, index) => {
+    expect($link.attr('href')).to.eq(rutasEsperadas[index])
+  })
+})
     it("each() con forEach nativo dentro del bloque then()", () => {
       cy.visit("/standings");
       cy.get('[data-testid="standings-row"]').then(($filas) => {

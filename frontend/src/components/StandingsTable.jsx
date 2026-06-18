@@ -44,7 +44,7 @@ export default function StandingsTable({ standings }) {
                   to={`/teams/${s.team?.id}`}
                   className="font-medium text-white hover:text-green transition-colors"
                 >
-                  {s.team?.name}
+                  <span data-testid="team-name">{s.team?.name}</span>
                 </Link>
               </td>
               <td className="py-3 text-center text-slate-400">{s.played}</td>
