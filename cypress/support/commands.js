@@ -8,7 +8,7 @@
 // Inicia sesión con las credenciales del administrador
 // ------------------------------------------------------------
 Cypress.Commands.add("loginComoAdmin", () => {
-  cy.session("admin", () => {
+  cy.session("admin-session", () => {
     cy.visit("/login");
     cy.get('input[type="email"]').type("admin@futbolstats.com");
     cy.get('input[type="password"]').type("admin1234");

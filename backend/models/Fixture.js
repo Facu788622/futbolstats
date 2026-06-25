@@ -1,14 +1,23 @@
-''use strict';
+"use strict";
 
-const { Model } = require('sequelize');
+const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
   class Fixture extends Model {
     static associate(db) {
-      Fixture.belongsTo(db.League, { foreignKey: 'league_id', as: 'league' });
-      Fixture.belongsTo(db.Team, { foreignKey: 'home_team_id', as: 'homeTeam' });
-      Fixture.belongsTo(db.Team, { foreignKey: 'away_team_id', as: 'awayTeam' });
-      Fixture.hasMany(db.FixtureEvent, { foreignKey: 'fixture_id', as: 'events' });
+      Fixture.belongsTo(db.League, { foreignKey: "league_id", as: "league" });
+      Fixture.belongsTo(db.Team, {
+        foreignKey: "home_team_id",
+        as: "homeTeam",
+      });
+      Fixture.belongsTo(db.Team, {
+        foreignKey: "away_team_id",
+        as: "awayTeam",
+      });
+      Fixture.hasMany(db.FixtureEvent, {
+        foreignKey: "fixture_id",
+        as: "events",
+      });
     }
   }
 
@@ -36,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
         validate: {
-          min: { args: [0], msg: 'El marcador no puede ser negativo' },
+          min: { args: [0], msg: "El marcador no puede ser negativo" },
         },
       },
       away_score: {
@@ -44,26 +53,26 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
         defaultValue: null,
         validate: {
-          min: { args: [0], msg: 'El marcador no puede ser negativo' },
+          min: { args: [0], msg: "El marcador no puede ser negativo" },
         },
       },
       status: {
-        type: DataTypes.ENUM('scheduled', 'live', 'finished'),
+        type: DataTypes.ENUM("scheduled", "live", "finished"),
         allowNull: false,
-        defaultValue: 'scheduled',
+        defaultValue: "scheduled",
       },
       date: {
         type: DataTypes.DATE,
         allowNull: false,
         validate: {
-          isDate: { msg: 'La fecha del partido no tiene formato válido' },
+          isDate: { msg: "La fecha del partido no tiene formato válido" },
         },
       },
       matchday: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
-          min: { args: [1], msg: 'La fecha debe ser mayor a 0' },
+          min: { args: [1], msg: "La fecha debe ser mayor a 0" },
         },
       },
       featured: {
@@ -79,13 +88,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'Fixture',
-      tableName: 'fixtures',
+      modelName: "Fixture",
+      tableName: "fixtures",
       underscored: true,
       timestamps: true,
       paranoid: true,
-      deletedAt: 'deleted_at',
-    }
+      deletedAt: "deleted_at",
+    },
   );
 
   return Fixture;
