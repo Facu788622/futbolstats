@@ -12,7 +12,7 @@ pipeline {
                     }
                 }
                 stage('Suite 2 - Interacciones') {
-                    agent { label 'agente-1' }
+                    agent { label 'agente-2' }
                     steps {
                         bat 'npm install'
                         bat 'npx cypress run --record --spec "cypress/e2e/nivel02-interacciones.cy.js"'
