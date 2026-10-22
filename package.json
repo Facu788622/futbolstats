@@ -1,5 +1,5 @@
 {
-  "name": "futbolstatss",
+  "name": "futbolstats",
   "version": "1.0.0",
   "description": "Aplicación web de estadísticas de fútbol — SUT para práctica de Cypress, Postman y MySQL.",
   "main": "index.js",
