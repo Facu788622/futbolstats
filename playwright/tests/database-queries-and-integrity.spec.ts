@@ -439,13 +439,17 @@ test.describe("Database Queries and Integrity", () => {
       expect(players.length).toBe(Number(row.total));
     });
 
-    test("TC-192-Verify the fixtures of the last matchday using a MAX subquery", async () => {
+    test("TC-192-Verify the active fixtures of the last matchday using a MAX subquery", async () => {
       // Workbench: 5 rows, matchday 4 (with the data of that moment)
+      // Only active fixtures count (deleted_at IS NULL), as in the app: the
+      // test fixtures soft-deleted by the API suite (matchday 99) must be ignored.
       const rows = await query(
-        "SELECT * FROM fixtures WHERE matchday IN (SELECT MAX(matchday) FROM fixtures)",
+        `SELECT * FROM fixtures
+         WHERE deleted_at IS NULL
+           AND matchday IN (SELECT MAX(matchday) FROM fixtures WHERE deleted_at IS NULL)`,
       );
       expect(rows.length).toBeGreaterThan(0);
-      const [row] = await query("SELECT MAX(matchday) AS last_matchday FROM fixtures");
+      const [row] = await query("SELECT MAX(matchday) AS last_matchday FROM fixtures WHERE deleted_at IS NULL");
       for (const f of rows) expect(Number(f.matchday)).toBe(Number(row.last_matchday));
     });
 

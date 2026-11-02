@@ -476,13 +476,17 @@ describe("Database Queries and Integrity", () => {
       });
     });
 
-    it("TC-192-Verify the fixtures of the last matchday using a MAX subquery", () => {
+    it("TC-192-Verify the active fixtures of the last matchday using a MAX subquery", () => {
       // Workbench: 5 rows, matchday 4 (with the data of that moment)
+      // Only active fixtures count (deleted_at IS NULL), as in the app: the
+      // test fixtures soft-deleted by the API suite (matchday 99) must be ignored.
       query(
-        "SELECT * FROM fixtures WHERE matchday IN (SELECT MAX(matchday) FROM fixtures)",
+        `SELECT * FROM fixtures
+         WHERE deleted_at IS NULL
+           AND matchday IN (SELECT MAX(matchday) FROM fixtures WHERE deleted_at IS NULL)`,
       ).then((rows) => {
         expect(rows).to.not.be.empty;
-        query("SELECT MAX(matchday) AS last_matchday FROM fixtures").then(([row]) => {
+        query("SELECT MAX(matchday) AS last_matchday FROM fixtures WHERE deleted_at IS NULL").then(([row]) => {
           rows.forEach((f) => expect(Number(f.matchday)).to.eq(Number(row.last_matchday)));
         });
       });
