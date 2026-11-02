@@ -1,66 +1,53 @@
 // ============================================================
 // cypress/support/commands.js
-// Custom Commands para FutbolStats
+// Custom commands for FutbolStats
+// TRANSVERSAL actions only (used across the whole suite).
+// Page-specific logic lives in cypress/support/pages/.
 // ============================================================
+import loginPage from "./pages/LoginPage";
+import navbar from "./pages/NavbarPage";
 
 // ------------------------------------------------------------
 // cy.loginComoAdmin()
-// Inicia sesión con las credenciales del administrador
+// Logs in with the administrator credentials
 // ------------------------------------------------------------
 Cypress.Commands.add("loginComoAdmin", () => {
   cy.session("admin-session", () => {
-    cy.visit("/login");
-    cy.get('input[type="email"]').type("admin@futbolstats.com");
-    cy.get('input[type="password"]').type("admin1234");
-    cy.get('button[type="submit"]').click();
+    loginPage.login("admin@futbolstats.com", "admin1234");
     cy.url().should("not.include", "/login");
   });
 });
 
 // ------------------------------------------------------------
 // cy.login(email, password)
-// Inicia sesión con credenciales arbitrarias
+// Logs in with arbitrary credentials
 // ------------------------------------------------------------
 Cypress.Commands.add("login", (email, password) => {
   cy.session(email, () => {
-    cy.visit("/login");
-    cy.get('input[type="email"]').type(email);
-    cy.get('input[type="password"]').type(password);
-    cy.get('button[type="submit"]').click();
+    loginPage.login(email, password);
     cy.url().should("not.include", "/login");
   });
 });
 
 // ------------------------------------------------------------
 // cy.cerrarSesion()
-// Cierra sesión desde la navbar
+// Logs out from the navbar
 // ------------------------------------------------------------
 Cypress.Commands.add("cerrarSesion", () => {
-  cy.get('[data-testid="logout-btn"]').click();
+  navbar.botonLogout().click();
   cy.url().should("include", "/login");
 });
 
 // ------------------------------------------------------------
 // cy.obtenerTokenAdmin()
-// Obtiene un JWT de admin via API, sin pasar por la UI
-// Útil para tests que requieren auth pero no testean el login
+// Gets an admin JWT through the API, without going through the UI.
+// Useful for tests that need auth but do not test the login itself
 // ------------------------------------------------------------
 Cypress.Commands.add("obtenerTokenAdmin", () => {
   cy.request("POST", "/api/auth/login", {
     email: "admin@futbolstats.com",
     password: "admin1234",
   }).then((response) => {
-    window.localStorage.setItem("token", response.body.token);
+    window.localStorage.setItem("token", response.body.data.token);
   });
-});
-
-// ------------------------------------------------------------
-// cy.verificarFilaStandings(posicion, equipoNombre)
-// Verifica que una posición de la tabla tenga el equipo correcto
-// ------------------------------------------------------------
-Cypress.Commands.add("verificarFilaStandings", (posicion, equipoNombre) => {
-  cy.get('[data-testid="standings-row"]')
-    .eq(posicion - 1)
-    .find('[data-testid="team-name"]')
-    .should("include.text", equipoNombre);
 });

@@ -1,5 +1,5 @@
 {
-  "email": "user@futbolstats.com",
-  "password": "user1234",
+  "email": "viewer@futbolstats.com",
+  "password": "viewer1234",
   "rol": "viewer"
 }

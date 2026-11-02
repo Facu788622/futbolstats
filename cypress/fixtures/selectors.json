@@ -1,0 +1,48 @@
+{
+  "comun": {
+    "nav": "nav",
+    "navLinks": "nav a",
+    "navListLinks": "nav ul a",
+    "navbar": "[data-testid='navbar']",
+    "main": "main",
+    "logout": "[data-testid='logout-btn']"
+  },
+  "login": {
+    "email": "input[type='email']",
+    "password": "input[type='password']",
+    "submit": "button[type='submit']"
+  },
+  "standings": {
+    "tabla": "table",
+    "tbody": "table tbody",
+    "fila": "[data-testid='standings-row']",
+    "position": "[data-testid='position']",
+    "teamName": "[data-testid='team-name']",
+    "teamLink": "[data-testid='team-link']",
+    "points": "[data-testid='points']",
+    "wins": "[data-testid='wins']",
+    "draws": "[data-testid='draws']"
+  },
+  "players": {
+    "card": "[data-testid='player-card']",
+    "name": "[data-testid='player-name']",
+    "positionFilter": "[data-testid='position-filter']"
+  },
+  "fixtures": {
+    "card": "[data-testid='fixture-card']",
+    "minuteSlider": "[data-testid='minute-slider']",
+    "minuteValue": "[data-testid='minute-value']",
+    "dateFrom": "[data-testid='date-from']",
+    "dateTo": "[data-testid='date-to']",
+    "applyDateFilter": "[data-testid='apply-date-filter']",
+    "errorMessage": "[data-testid='error-message']"
+  },
+  "admin": {
+    "panel": "[data-testid='admin-panel']",
+    "featuredCheckbox": "[data-testid='fixture-featured-checkbox']",
+    "checkbox": "input[type='checkbox']",
+    "draggableItem": "[data-testid='draggable-item']",
+    "editPlayerBtn": "[data-testid='edit-player-btn']",
+    "fileInput": "input[type='file']"
+  }
+}

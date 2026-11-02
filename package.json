@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Facu788622/futbolstats#readme",
   "devDependencies": {
     "@faker-js/faker": "^9.9.0",
-    "cypress": "^15.17.0"
+    "cypress": "^15.17.0",
+    "mysql2": "^3.24.6"
   }
 }
