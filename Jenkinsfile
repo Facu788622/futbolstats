@@ -1,3 +1,31 @@
+// Publishes the Playwright results of one stage in Jenkins:
+//  - JUnit XML: pass/fail counts and trends in the Jenkins UI
+//  - HTML report + evidence (traces, screenshots, videos): archived artifacts
+// UI, API and DB stages all generate the same folder names, so each stage
+// renames them with its own suffix before archiving; otherwise the archived
+// files of one stage would overwrite those of another.
+def publishPlaywright(String suite) {
+    junit allowEmptyResults: true, testResults: 'playwright/reports/junit.xml'
+    dir('playwright') {
+        bat """
+if exist report-${suite} rmdir /s /q report-${suite}
+if exist evidence-${suite} rmdir /s /q evidence-${suite}
+if exist playwright-report ren playwright-report report-${suite}
+if exist test-results ren test-results evidence-${suite}
+"""
+    }
+    archiveArtifacts artifacts: "playwright/report-${suite}/**,playwright/evidence-${suite}/**",
+                     allowEmptyArchive: true
+    // Clean up so the next build in this workspace never republishes stale files
+    dir('playwright') {
+        bat """
+if exist report-${suite} rmdir /s /q report-${suite}
+if exist evidence-${suite} rmdir /s /q evidence-${suite}
+if exist reports rmdir /s /q reports
+"""
+    }
+}
+
 pipeline {
     agent none
 
@@ -129,6 +157,10 @@ pipeline {
                                     }
                                 }
                             }
+                            post {
+                                // always: results are published even when tests fail
+                                always { script { publishPlaywright('ui') } }
+                            }
                         }
                         stage('PW API - REST API Endpoints') {
                             agent { label 'Agent2' }
@@ -139,6 +171,9 @@ pipeline {
                                         bat 'npm run test:api'
                                     }
                                 }
+                            }
+                            post {
+                                always { script { publishPlaywright('api') } }
                             }
                         }
                     }
@@ -161,6 +196,9 @@ pipeline {
                                 }
                             }
                         }
+                    }
+                    post {
+                        always { script { publishPlaywright('db') } }
                     }
                 }
             }
