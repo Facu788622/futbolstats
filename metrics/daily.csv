@@ -1,0 +1,5 @@
+date,day,framework,role,suite,mode,env,build,commit,total,passed,failed,skipped,flaky,duration_s,notes
+2026-11-09,D01,cypress,leader,full,headless,local,,cfbfc48,196,188,0,8,0,63,Electron 138; specs sequential
+2026-11-09,D01,playwright,mirror,full,headless,local,,cfbfc48,196,188,0,8,1,54.5,6 workers; retries=1; flaky TC-124
+2026-11-10,D01,cypress,leader,full,headless,jenkins,9,cfbfc48,196,188,0,8,0,37,2 agents parallel; build total 257s
+2026-11-10,D01,playwright,mirror,full,headless,jenkins,9,cfbfc48,196,188,0,8,2,93,1 worker; retries=1; flaky TC-028 TC-124; build total 257s
